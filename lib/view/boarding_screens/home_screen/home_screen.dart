@@ -6,6 +6,7 @@ import 'package:ecom/widgets/producthorizontallist.dart';
 import 'package:ecom/widgets/searchbar.dart';
 import 'package:ecom/widgets/sectionheader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -17,8 +18,15 @@ class HomeScreen extends StatelessWidget {
       create: (_) => HomeController(),
       child: Consumer<HomeController>(
         builder: (context, controller, _) {
+           SystemChrome.setSystemUIOverlayStyle(
+            const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,  
+              statusBarIconBrightness: Brightness.dark, 
+            ),
+          );
           if (controller.isLoading) {
             return const Scaffold(
+              
               body: Center(child: CircularProgressIndicator()),
             );
           }

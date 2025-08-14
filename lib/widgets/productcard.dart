@@ -55,7 +55,7 @@ class ProductCard extends StatelessWidget {
             children: [
               const Icon(Icons.star, size: 14, color: Color(0xffFFC120)),
               const SizedBox(width: 4),
-              Text('${item.rating}   ${item.reviews}',
+              Text('${item.rating}   ${item.reviews} Reviews',
                   style: const TextStyle(fontSize: 12)),
               const Spacer(),
               const Icon(Icons.more_vert, size: 14, color: Color(0xff838589)),

@@ -21,7 +21,7 @@ class ProductHorizontalList extends StatelessWidget {
               title: apiItem.name?.toString() ?? '',
               price: "Rs. ${apiItem.price ?? 0}",
               rating: "4.5",
-              reviews: "N/A",
+              reviews: "1.1k",
               imageAsset: apiItem.thumbnailImage ?? '',
             ),
           );
