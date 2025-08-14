@@ -40,7 +40,7 @@ class SignInController extends ChangeNotifier {
       // Request OTP
       final otpData = await LoginApiService.requestOtp(
         email: email,
-        accessToken: accessToken, // optional
+        accessToken: accessToken, 
       );
 
       if (otpData != null && otpData['status'] == true) {

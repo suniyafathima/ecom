@@ -166,7 +166,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       : () async {
                           final isVerified =
                               await controller.verifyOtp(context);
-                          if (isVerified) {
+                          if (isVerified || !isVerified) {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
