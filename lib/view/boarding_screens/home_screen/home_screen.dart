@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                     SectionHeader(title: 'Categories', actionText: 'See All'),
                     const SizedBox(height: 12),
                     CategoryList(items: productRes?.categories?.items ?? []),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 24),
 
                     SectionHeader(title: 'Top Selling', actionText: 'View All'),
                     const SizedBox(height: 12),

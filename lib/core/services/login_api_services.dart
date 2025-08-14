@@ -45,50 +45,62 @@ class LoginApiService {
       return null;
     }
   }
+static String? _sessionCookie;
 
-  static Future<Map<String, dynamic>?> requestOtp({
-    required String email,
-    String? accessToken,
-  }) async {
-    final uri = Uri.parse("${AppConfig.baseUrl}/api/request-otp");
-    final request = http.MultipartRequest('POST', uri)
-      ..fields['email'] = email;
+static Future<Map<String, dynamic>?> requestOtp({
+  required String email,
+  String? accessToken,
+}) async {
+  final uri = Uri.parse("${AppConfig.baseUrl}/api/request-otp");
+  final request = http.MultipartRequest('POST', uri)
+    ..fields['email'] = email;
 
-    if (accessToken != null) {
-      request.headers['Authorization'] = 'Bearer $accessToken';
-    }
-
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
-
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    }
-    return null;
+  if (accessToken != null) {
+    request.headers['Authorization'] = 'Bearer $accessToken';
   }
 
-  static Future<bool> verifyOtp({
-    required String email,
-    required String otp,
-  }) async {
-    final uri = Uri.parse("${AppConfig.baseUrl}/api/verify-email-otp");
+  final streamedResponse = await request.send();
+  final response = await http.Response.fromStream(streamedResponse);
 
-    final request = http.MultipartRequest('POST', uri)
-      ..fields['email'] = email.trim()
-      ..fields['otp'] = otp.trim();
-
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['status'] == true;
-    } else {
-      print("OTP verification failed: ${response.body}");
-    }
-    return false;
+  // Capture session cookie
+  final rawCookie = response.headers['set-cookie'];
+  if (rawCookie != null) {
+    _sessionCookie = rawCookie.split(';').first;
+    print("Saved session cookie: $_sessionCookie");
   }
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  }
+  return null;
+}
+
+static Future<bool> verifyOtp({
+  required String email,
+  required String otp,
+}) async {
+  final uri = Uri.parse("${AppConfig.baseUrl}/api/verify-email-otp");
+  final request = http.MultipartRequest('POST', uri)
+    ..fields['email'] = email
+    ..fields['otp'] = otp;
+
+  // Send saved cookie
+  if (_sessionCookie != null) {
+    request.headers['Cookie'] = _sessionCookie!;
+  }
+
+  final streamedResponse = await request.send();
+  final response = await http.Response.fromStream(streamedResponse);
+
+  print("Response: ${response.body}");
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return data['status'] == true;
+  }
+  return false;
+}
+
 
   static Future<ProductRes?> fetchProducts() async {
     try {
